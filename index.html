@@ -1,0 +1,1722 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Montesphere — Ökosystem aus Montenegro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ─────── Reset + base ─────── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-0: #03050d;
+    --bg-1: #050a1c;
+    --bg-2: #08122e;
+    --ink: #ffffff;
+    --ink-soft: rgba(245, 247, 255, 0.85);
+    --ink-mute: rgba(245, 247, 255, 0.55);
+    --line: rgba(245, 247, 255, 0.12);
+    --line-strong: rgba(245, 247, 255, 0.24);
+    --gold: #c9a96e;
+    --serif: "Fraunces", "Times New Roman", serif;
+    --sans: "Inter", system-ui, -apple-system, sans-serif;
+  }
+
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bg-0);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+  /* ─────── Cosmic backdrop ─────── */
+  .cosmos {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 0%,    rgba(70, 100, 200, 0.20), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 80% 100%,  rgba(20, 200, 220, 0.10), transparent 65%),
+      radial-gradient(ellipse 50% 45% at 10% 90%,   rgba(200, 160, 80, 0.06), transparent 65%),
+      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 50%, #02040c 100%);
+    overflow: hidden;
+  }
+  /* tiny stars */
+  .cosmos::before, .cosmos::after {
+    content: ""; position: absolute; inset: -10%;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 27% 82%, #cfe2ff 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 52% 33%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 69% 12%, #b8d3ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 81% 68%, #fff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 91% 22%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 7% 60%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 36% 50%, #d8e6ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 44% 91%, #fff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 62% 77%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 23% 41%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 78% 38%, #cfe2ff 50%, transparent 51%);
+    opacity: 0.85;
+    animation: drift 160s linear infinite;
+  }
+  .cosmos::after {
+    background-image:
+      radial-gradient(1px 1px at 8% 30%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 24% 12%, #cfe2ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 40% 70%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 58% 22%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 73% 47%, #b8d3ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 87% 84%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 95% 41%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 18% 88%, #fff 50%, transparent 51%);
+    opacity: 0.5;
+    animation-duration: 240s;
+    animation-direction: reverse;
+  }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-3%, -2%, 0); }
+  }
+  /* twinkling sparkles */
+  .sparkles {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .sparkles span {
+    position: absolute;
+    width: 2px; height: 2px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 6px #fff, 0 0 12px rgba(255,255,255,0.6);
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.8); }
+    50%      { opacity: 1;    transform: scale(1.2); }
+  }
+
+  /* aurora wash */
+  .aurora {
+    position: absolute;
+    width: 70vw; height: 70vw;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(80, 130, 220, 0.18), transparent 45%);
+    filter: blur(40px);
+    pointer-events: none;
+    animation: pulse 8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.05); }
+  }
+
+  /* ─────── Top bar ─────── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 22px 36px;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .topbar .brand { justify-self: start; }
+  .topbar .locale-switch { justify-self: end; }
+  .topbar .brand {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.32em;
+    text-transform: none;
+    color: var(--ink);
+  }
+  .brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 12px var(--gold), 0 0 24px rgba(201, 169, 110, 0.4);
+  }
+  .locale-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(245, 247, 255, 0.16);
+    border-radius: 999px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    overflow: hidden;
+    background: rgba(3, 5, 13, 0.28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .locale-switch button {
+    padding: 6px 9px;
+    color: var(--ink-mute);
+    transition: background 180ms ease, color 180ms ease;
+  }
+  .locale-switch button:hover,
+  .locale-switch button.active {
+    background: rgba(245, 247, 255, 0.1);
+    color: var(--ink);
+  }
+  @media (max-width: 720px) {
+    .topbar { padding: 14px 14px; }
+    .topbar .brand {
+      gap: 9px;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+    }
+    .locale-switch {
+      font-size: 8px;
+      letter-spacing: 0.12em;
+    }
+    .locale-switch button { padding: 6px 7px; }
+  }
+
+  /* ─────── Stage ─────── */
+  .stage {
+    position: relative; z-index: 2;
+    width: 100vw; height: 100vh;
+    display: grid;
+    place-items: center;
+    grid-template-rows: auto 1fr auto;
+    padding: 80px 24px 60px;
+  }
+
+  .header-block { text-align: center; }
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: ""; display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--line-strong);
+  }
+  .headline {
+    margin-top: 14px;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(28px, 4.4vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .headline em {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-weight: 300;
+  }
+
+  /* Orbital area */
+  .orbital-area { position: relative; display: grid; place-items: center; width: 100%; height: 100%; }
+
+  .orbital-wrapper {
+    position: relative;
+    width: min(82vmin, 720px);
+    aspect-ratio: 1 / 1;
+  }
+
+  .orbit-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px dashed rgba(245, 247, 255, 0.25);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .orbit-ring.outer { inset: -10%; border-color: rgba(245, 247, 255, 0.12); }
+  .orbit-ring.inner { inset: 20%; border-color: rgba(245, 247, 255, 0.18); }
+  .orbit-ring.deep  { inset: 32%; border-color: rgba(201, 169, 110, 0.18); }
+
+  /* slow rotating gold sweep */
+  .orbit-sweep {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: conic-gradient(
+      from 0deg,
+      rgba(201, 169, 110, 0) 0deg,
+      rgba(201, 169, 110, 0.18) 40deg,
+      rgba(245, 247, 255, 0.22) 60deg,
+      rgba(201, 169, 110, 0.0) 110deg,
+      rgba(201, 169, 110, 0) 360deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 49.2%, #000 49.5%, #000 50.4%, transparent 50.7%);
+            mask: radial-gradient(circle, transparent 49.2%, #000 49.5%, #000 50.4%, transparent 50.7%);
+    animation: rotate var(--sweep-dur, 18s) linear infinite;
+    opacity: 0.9;
+  }
+
+  /* radial pulse from center */
+  .orbit-pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 32%; aspect-ratio: 1/1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 110, 0.35);
+    pointer-events: none;
+    animation: orbitPulse 5s ease-out infinite;
+  }
+  .orbit-pulse.delay { animation-delay: 2.5s; }
+  @keyframes orbitPulse {
+    0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.55; }
+    100% { transform: translate(-50%, -50%) scale(2.3); opacity: 0;    }
+  }
+
+  /* connector lines from center to each satellite (SVG) */
+  .connectors {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .connectors line {
+    stroke: rgba(245, 247, 255, 0.85);
+    stroke-width: 1;
+    opacity: 0.08;
+    transition: opacity 300ms ease, stroke 300ms ease;
+  }
+  .connectors line.active {
+    opacity: 0.35;
+    stroke: var(--lineAccent, rgba(245,247,255,0.9));
+  }
+
+  /* tick marks rotate slowly */
+  .orbit-ticks {
+    position: absolute;
+    inset: -1%;
+    border-radius: 50%;
+    pointer-events: none;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0 1.5deg, rgba(245,247,255,.32) 1.5deg 2deg,
+      transparent 2deg 30deg, rgba(245,247,255,.18) 30deg 30.4deg,
+      transparent 30.4deg 60deg, rgba(245,247,255,.18) 60deg 60.4deg,
+      transparent 60.4deg 90deg, rgba(245,247,255,.32) 90deg 90.5deg,
+      transparent 90.5deg 120deg, rgba(245,247,255,.18) 120deg 120.4deg,
+      transparent 120.4deg 150deg, rgba(245,247,255,.18) 150deg 150.4deg,
+      transparent 150.4deg 180deg, rgba(245,247,255,.32) 180deg 180.5deg,
+      transparent 180.5deg 210deg, rgba(245,247,255,.18) 210deg 210.4deg,
+      transparent 210.4deg 240deg, rgba(245,247,255,.18) 240deg 240.4deg,
+      transparent 240.4deg 270deg, rgba(245,247,255,.32) 270deg 270.5deg,
+      transparent 270.5deg 300deg, rgba(245,247,255,.18) 300deg 300.4deg,
+      transparent 300.4deg 330deg, rgba(245,247,255,.18) 330deg 330.4deg,
+      transparent 330.4deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 49.5%, #000 49.7%, #000 50.1%, transparent 50.3%);
+            mask: radial-gradient(circle, transparent 49.5%, #000 49.7%, #000 50.1%, transparent 50.3%);
+    animation: rotate 90s linear infinite;
+  }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+
+  /* ─── Center node ─── */
+  .center-node {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 34%;
+    aspect-ratio: 1/1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 38%, #1c2e52, #060a14 70%);
+    border: 1px solid rgba(201, 169, 110, 0.45);
+    box-shadow:
+      inset 0 0 60px rgba(255,255,255,0.08),
+      inset 0 0 0 1px rgba(201, 169, 110, 0.14),
+      0 30px 80px rgba(0,0,0,0.6),
+      0 0 80px rgba(201, 169, 110, 0.25);
+    display: grid;
+    place-items: center;
+    z-index: 5;
+  }
+  .center-node::before,
+  .center-node::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    animation: ringPulse 3.6s ease-out infinite;
+    pointer-events: none;
+  }
+  .center-node::after { animation-delay: 1.8s; }
+  @keyframes ringPulse {
+    0%   { transform: scale(1);    opacity: 0.7; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+  .center-inner {
+    text-align: center;
+    z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .center-name {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(18px, 2.6vmin, 24px);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: rgba(201, 169, 110, 0.92);
+    text-shadow: 0 0 22px rgba(201, 169, 110, 0.35);
+    white-space: nowrap;
+  }
+
+  /* ─── Satellites ─── */
+  .orbital-item {
+    position: absolute;
+    top: 0; left: 0;
+    width: 23%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 35% 30%, #11182e 0%, #0a0f1e 70%);
+    border: 1px solid rgba(245, 247, 255, 0.22);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+      inset 2px 0 80px rgba(255, 255, 255, 0.22),
+      inset -2px 0 80px rgba(255, 255, 255, 0.22),
+      inset 0 2px 80px rgba(255, 255, 255, 0.22),
+      inset 0 -2px 80px rgba(255, 255, 255, 0.22),
+      0 14px 46px rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    transition:
+      box-shadow 500ms ease,
+      border-color 300ms ease,
+      transform 400ms cubic-bezier(.2,.8,.2,1);
+    will-change: left, top, transform;
+  }
+  .orbital-item .logo-disc {
+    position: absolute;
+    inset: -2%;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+    transition: transform 320ms cubic-bezier(.2,.8,.2,1);
+  }
+  .orbital-item:hover .logo-disc { transform: scale(1.06); }
+  .orbital-item .logo-disc img {
+    width: 102%;
+    height: 102%;
+    object-fit: contain;
+    filter:
+      drop-shadow(0 6px 14px rgba(0,0,0,0.55))
+      drop-shadow(0 0 18px rgba(255,255,255,0.18));
+    pointer-events: none;
+  }
+  /* per-company logo treatment so they all read on dark bg */
+  .orbital-item[data-id="monte-i-more"] .logo-disc img {
+    filter:
+      invert(1) brightness(1.25) contrast(1.1)
+      drop-shadow(0 6px 14px rgba(0,0,0,0.55))
+      drop-shadow(0 0 22px rgba(255,255,255,0.25));
+  }
+  .orbital-item[data-id="docc"] .logo-disc {
+    inset: auto;
+    left: 53%;
+    top: 52.5%;
+    width: 62%;
+    height: 62%;
+    transform: translate(-50%, -50%);
+  }
+  .orbital-item[data-id="docc"]:hover .logo-disc {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+  .orbital-item[data-id="docc"] .logo-disc img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter:
+      brightness(1.5) contrast(1.25) saturate(1.15)
+      drop-shadow(0 6px 14px rgba(0,0,0,0.5))
+      drop-shadow(0 0 28px rgba(212,160,23,0.5));
+  }
+  .orbital-item[data-id="montestate-marine"] .logo-disc img {
+    filter:
+      brightness(1.55) contrast(1.1)
+      drop-shadow(0 6px 14px rgba(0,0,0,0.5))
+      drop-shadow(0 0 22px rgba(6,182,212,0.3));
+  }
+  .orbital-item[data-id="immo-monte"] .logo-disc img {
+    filter:
+      brightness(1.05)
+      drop-shadow(0 6px 14px rgba(0,0,0,0.55))
+      drop-shadow(0 0 22px rgba(59,91,219,0.4));
+  }
+  .orbital-item[data-id="rozaje"] .logo-disc img {
+    filter:
+      brightness(1.2) contrast(1.1)
+      drop-shadow(0 6px 14px rgba(0,0,0,0.55))
+      drop-shadow(0 0 22px rgba(56,189,248,0.4));
+  }
+
+  .orbital-item .label {
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    white-space: nowrap;
+    font-family: var(--serif);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    opacity: 0;
+    transition: opacity 280ms ease, transform 280ms ease;
+    pointer-events: none;
+  }
+
+  /* hover: stronger inset glow + accent outer glow */
+  .orbital-item:hover {
+    transform: scale(1.14);
+    border-color: rgba(245, 247, 255, 0.5);
+    box-shadow:
+      inset 4px 0 160px rgba(255, 255, 255, 0.55),
+      inset -4px 0 160px rgba(255, 255, 255, 0.55),
+      inset 0 4px 160px rgba(255, 255, 255, 0.55),
+      inset 0 -4px 160px rgba(255, 255, 255, 0.55),
+      0 0 120px var(--accent),
+      0 0 240px var(--accent),
+      0 0 60px rgba(0,0,0,0.4);
+  }
+  .orbital-item:hover .label {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .orbital-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
+  }
+
+  /* small accent dot under each satellite */
+  .orbital-item::before {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px var(--accent);
+    opacity: 0.7;
+  }
+
+  /* ─────── Footer hint ─────── */
+  .footer-hint {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .footer-hint a {
+    display: inline-flex;
+    color: var(--ink-soft);
+    transition: color 180ms ease, text-shadow 180ms ease;
+  }
+  .footer-hint a:hover {
+    color: var(--ink);
+    text-shadow: 0 0 18px rgba(201, 169, 110, 0.28);
+  }
+  .footer-hint .key {
+    display: inline-block;
+    margin: 0 4px;
+    padding: 2px 7px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 9px;
+    color: var(--ink-soft);
+  }
+
+  /* corner coords */
+  .coord {
+    position: fixed;
+    bottom: 22px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    z-index: 25;
+    pointer-events: none;
+  }
+  .coord.left { left: 36px; }
+  .coord.right { right: 36px; text-align: right; }
+  @media (max-width: 720px) {
+    .coord { display: none; }
+  }
+
+  /* ─────── Detail panel ─────── */
+  .scrim {
+    position: fixed; inset: 0;
+    background: rgba(2, 4, 12, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 80;
+    transition: opacity 400ms ease;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+
+  .panel {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100vh;
+    width: min(560px, 100vw);
+    background: linear-gradient(180deg, #060b1c 0%, #03060f 100%);
+    border-left: 1px solid var(--line-strong);
+    z-index: 90;
+    transform: translateX(100%);
+    transition: transform 520ms cubic-bezier(.2,.8,.2,1);
+    box-shadow: -40px 0 80px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .panel.open { transform: translateX(0); }
+
+  .panel .panel-top {
+    position: relative;
+    padding: 28px 32px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .panel .panel-disc {
+    width: 78px; height: 78px;
+    border-radius: 50%;
+    background: var(--logoBg);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+  .panel .panel-disc img { width: 100%; height: 100%; object-fit: contain; }
+  .panel .panel-disc[data-id="monte-i-more"] img { filter: invert(1) brightness(1.2); }
+  .panel .panel-disc[data-id="docc"] img { filter: none; }
+  .panel .panel-disc[data-id="montestate-marine"] img { filter: brightness(1.5); }
+  .panel .panel-disc[data-id="rozaje"] img { filter: brightness(1.2); }
+  .panel .panel-id {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+  }
+  .panel .panel-name {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+  .panel .panel-close {
+    position: absolute;
+    top: 22px; right: 22px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    transition: background 200ms, border-color 200ms;
+  }
+  .panel .panel-close:hover { background: rgba(255,255,255,0.06); border-color: var(--ink-soft); }
+  .panel .panel-close svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.4; fill: none; }
+
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 32px 40px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+  }
+  .panel-body::-webkit-scrollbar { width: 6px; }
+  .panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 4px; }
+
+  .panel .eyebrow-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+  }
+  .panel .eyebrow-row .accent-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--accent);
+  }
+  .panel .eyebrow-row .accent-pill::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .panel .tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+    margin-bottom: 22px;
+  }
+  .panel .lede {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+    margin-bottom: 32px;
+  }
+
+  .section-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .section-head h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+  }
+  .section-head .num {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+  }
+
+  .services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .service {
+    background: rgba(8, 12, 28, 0.65);
+    padding: 18px 16px 20px;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 240ms ease;
+  }
+  .service:hover { background: rgba(20, 28, 60, 0.65); }
+  .service .s-num {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--accent);
+  }
+  .service h4 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.25;
+  }
+  .service p {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .visit {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 32px;
+    padding: 16px 24px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition: background 240ms, color 240ms;
+  }
+  .visit:hover { background: var(--accent); color: #03050d; }
+  .visit .arrow {
+    width: 14px; height: 1px;
+    background: currentColor;
+    position: relative;
+  }
+  .visit .arrow::after {
+    content: ""; position: absolute;
+    right: 0; top: -3px;
+    width: 7px; height: 7px;
+    border-top: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  .panel-meta {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 24px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .panel-meta .k {
+    font-family: ui-monospace, monospace;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+
+  /* ───── small screens ───── */
+  @media (max-width: 720px) {
+    .stage { padding: 70px 14px 50px; }
+    .orbital-wrapper { width: 92vmin; }
+    .orbital-item { width: 22%; }
+    .center-node { width: 36%; }
+    .panel { width: 100vw; border-left: 0; }
+    .services { grid-template-columns: 1fr; }
+  }
+
+  /* fade-in */
+  .fade-in { animation: fadeIn 800ms ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ─────── Tweaks panel ─────── */
+  .tweaks {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 110;
+    width: 280px;
+    background: rgba(8, 12, 28, 0.92);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    padding: 18px 18px 22px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: var(--ink-soft);
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 280ms ease, opacity 280ms ease;
+  }
+  .tweaks.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .tweaks-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .tweaks h4 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .tweaks-close {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+  }
+  .tweaks-close svg { width: 11px; height: 11px; stroke: currentColor; stroke-width: 1.5; fill: none; }
+  .tweak-section { margin-top: 14px; }
+  .tweak-label {
+    font-family: var(--serif);
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .tweak-help {
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .seg {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .seg button {
+    flex: 1;
+    padding: 7px 6px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--line);
+    transition: background 200ms, color 200ms;
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
+  .seg button.active {
+    background: var(--gold);
+    color: #03050d;
+  }
+</style>
+</head>
+<body>
+
+<!-- Cosmos backdrop -->
+<div class="cosmos">
+  <div class="aurora"></div>
+  <div class="sparkles" id="sparkles"></div>
+</div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="brand"><span class="dot"></span> Montesphere</div>
+  <div class="locale-switch" aria-label="Language">
+    <button type="button" data-lang="de">DE</button>
+    <button type="button" data-lang="en">ENG</button>
+    <button type="button" data-lang="mne">MNE</button>
+  </div>
+</header>
+
+<!-- Stage -->
+<main class="stage">
+  <div class="header-block fade-in">
+    <div class="eyebrow" data-i18n="hero.eyebrow">Montenegro Ecosystem · Est. 2024</div>
+    <h1 class="headline" data-i18n-html="hero.headline">Fünf Häuser. <em>Eine</em> Adriatische Sphäre.</h1>
+  </div>
+
+  <div class="orbital-area">
+    <div class="orbital-wrapper" id="orbital">
+      <div class="orbit-ring outer"></div>
+      <div class="orbit-ring"></div>
+      <div class="orbit-ring inner"></div>
+      <div class="orbit-ring deep"></div>
+      <div class="orbit-sweep"></div>
+      <div class="orbit-ticks"></div>
+
+      <div class="orbit-pulse"></div>
+      <div class="orbit-pulse delay"></div>
+
+      <svg class="connectors" id="connectors" preserveAspectRatio="none"></svg>
+
+      <div class="center-node">
+        <div class="center-inner">
+          <div class="center-name">Montesphere</div>
+        </div>
+      </div>
+
+      <!-- satellites injected by JS -->
+    </div>
+  </div>
+
+  <div class="footer-hint fade-in">
+    <a href="mailto:CONTACT@MONTESPHERE.COM">CONTACT@MONTESPHERE.COM</a>
+  </div>
+</main>
+
+<!-- Coords -->
+<div class="coord left">42°27′N · 18°32′E</div>
+<div class="coord right">MNE/ECO-005</div>
+
+<!-- Detail panel -->
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-hidden="true">
+  <div class="panel-top">
+    <div class="panel-disc" id="p-disc" style="background-color: rgb(15, 23, 42)"><img id="p-logo" alt="" /></div>
+    <div>
+      <div class="panel-id" id="p-id">MNE/ECO-001</div>
+      <div class="panel-name" id="p-name">—</div>
+    </div>
+    <button class="panel-close" id="p-close" aria-label="Schließen" data-i18n-aria="actions.close">
+      <svg viewBox="0 0 24 24"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+    </button>
+  </div>
+  <div class="panel-body">
+    <div class="eyebrow-row">
+      <span id="p-sector">SECTOR</span>
+      <span class="accent-pill" id="p-status">aktiv</span>
+    </div>
+    <div class="tagline" id="p-tagline">—</div>
+    <div class="lede" id="p-lede">—</div>
+
+    <div class="section-head">
+      <h3 data-i18n="panel.services">Leistungen</h3>
+      <span class="num" id="p-snum">04 / SERVICES</span>
+    </div>
+    <div class="services" id="p-services"></div>
+
+    <a class="visit" id="p-visit" href="#" target="_blank" rel="noopener">
+      <span data-i18n="actions.visit">Website besuchen</span> <span class="arrow"></span>
+    </a>
+
+    <div class="panel-meta">
+      <div>
+        <div class="k" data-i18n="meta.hq">Hauptsitz</div>
+        <div id="p-hq">—</div>
+      </div>
+      <div>
+        <div class="k" data-i18n="meta.founded">Gegründet</div>
+        <div id="p-founded">—</div>
+      </div>
+      <div>
+        <div class="k" data-i18n="meta.region">Region</div>
+        <div id="p-region">—</div>
+      </div>
+      <div>
+        <div class="k" data-i18n="meta.sphere">Sphäre</div>
+        <div id="p-sphere">—</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Tweaks panel -->
+<aside class="tweaks" id="tweaks" aria-hidden="true">
+  <div class="tweaks-head">
+    <h4>Tweaks</h4>
+    <button class="tweaks-close" id="tweaks-close" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="tweak-section">
+    <div class="tweak-label">Sphere Mood</div>
+    <div class="tweak-help">Recasts the palette — center glow, accents, sweep.</div>
+    <div class="seg" data-tweak="mood">
+      <button data-val="gold">Gold</button>
+      <button data-val="marine">Marine</button>
+      <button data-val="ember">Ember</button>
+      <button data-val="frost">Frost</button>
+    </div>
+  </div>
+
+  <div class="tweak-section">
+    <div class="tweak-label">Orbit Cadence</div>
+    <div class="tweak-help">From meditative drift to electric spin.</div>
+    <div class="seg" data-tweak="cadence">
+      <button data-val="calm">Calm</button>
+      <button data-val="flow">Flow</button>
+      <button data-val="spin">Spin</button>
+    </div>
+  </div>
+
+  <div class="tweak-section">
+    <div class="tweak-label">Cosmos Density</div>
+    <div class="tweak-help">Sparse and quiet, or dense and shimmering.</div>
+    <div class="seg" data-tweak="cosmos">
+      <button data-val="void">Void</button>
+      <button data-val="orbit">Orbit</button>
+      <button data-val="galaxy">Galaxy</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  /* ───── Data ───── */
+  const COMPANIES = [
+    {
+      id: "monte-i-more",
+      code: "MNE/ECO-001",
+      name: "Monte i More",
+      sector: "Tourismus",
+      tagline: "Tourismus zwischen Küste und Bergen.",
+      lede: "Die einzige operativ tätige Tourismusgesellschaft der Sphäre. Wir kuratieren Reisen, die das Land in seiner ganzen Breite zeigen — von der Bucht von Kotor bis zu den Hochebenen des Nordens.",
+      services: [
+        { t: "Buchungen", d: "Kuratierte Aufenthalte in ausgewählten Häusern und Hotels." },
+        { t: "Apartments", d: "Privatresidenzen entlang der Küste und im Hinterland." },
+        { t: "Boote", d: "Tagestouren und Charter ab Tivat, Budva und Herceg Novi." },
+        { t: "Erlebnisse", d: "Kulinarik, Wandern, Weingüter, lokal geführt." }
+      ],
+      website: "https://monteimore.me",
+      hq: "Tivat, Montenegro",
+      founded: "2019",
+      region: "Küste & Inland",
+      sphere: "Tourismus",
+      accent: "#c9a96e",
+      logoBg: "#0a0a0a",
+      logo: "public/logos/monte-i-more.png"
+    },
+    {
+      id: "immo-monte",
+      code: "MNE/ECO-002",
+      name: "Immo Monte",
+      sector: "Immobilien & Relocation",
+      tagline: "Immobilien & Relocation, neu gedacht.",
+      lede: "Wir begleiten europäische Familien und Unternehmer beim Schritt nach Montenegro — vom ersten Objekt bis zur Steuer- und Aufenthaltsfrage. Mit Vertrauen, lokalem Netzwerk und Diskretion.",
+      services: [
+        { t: "Immobilien", d: "Geprüfte Objekte vom Apartment bis zur Villa." },
+        { t: "Relocation", d: "Aufenthaltstitel, Bankkonto, Schulen, Healthcare." },
+        { t: "Rechtsberatung", d: "Kaufvertrag, Eigentumsübertragung, Compliance." },
+        { t: "Lokales Netzwerk", d: "Architekten, Notare, Verwalter — alles aus einer Hand." }
+      ],
+      website: "https://immo-monte.me/",
+      hq: "Budva, Montenegro",
+      founded: "2022",
+      region: "ME · weit",
+      sphere: "Real Estate",
+      accent: "#3b5bdb",
+      logoBg: "#ffffff",
+      logo: "public/logos/immo-monte.png"
+    },
+    {
+      id: "docc",
+      code: "MNE/ECO-003",
+      name: "DOCC",
+      sector: "Bau & Realisierung",
+      tagline: "Bau & Realisierung, präzise ausgeführt.",
+      lede: "Generalunternehmer für anspruchsvolle Wohn- und Gewerbeprojekte. Wir übersetzen Architektur in Substanz — vom Erdaushub bis zum schlüsselfertigen Übergabeprotokoll.",
+      services: [
+        { t: "Bauausführung", d: "Rohbau, Ausbau, technische Gewerke aus einer Hand." },
+        { t: "Projektmanagement", d: "Kosten, Termine, Qualität — transparent berichtet." },
+        { t: "Technische Realisierung", d: "Statik, Haustechnik, Smart-Home-Integration." },
+        { t: "Bauüberwachung", d: "Externe Kontrolle für Investoren und Bauherren." }
+      ],
+      website: "https://docc.me",
+      hq: "Podgorica, Montenegro",
+      founded: "2023",
+      region: "Zentral / Küste",
+      sphere: "Construction",
+      accent: "#d4a017",
+      logoBg: "#3a3a3a",
+      logo: "public/logos/docc.png"
+    },
+    {
+      id: "rozaje",
+      code: "MNE/ECO-004",
+      name: "Rožaje 365",
+      sector: "Alpiner Tourismus",
+      tagline: "Die alpine Projektwelt des Nordens.",
+      lede: "Rožaje, das ganze Jahr. Skigebiete, Wanderhochebenen und ein in Europa noch unentdecktes Investitionsgebiet — wir entwickeln den Norden Montenegros zu einem alpinen Ziel mit eigener Handschrift.",
+      services: [
+        { t: "Wintertourismus", d: "Pisten, Lifte, Hütten, Skischule." },
+        { t: "Alpine Erlebnisse", d: "Trekking, Bike-Park, Nordic Walking, Forellen-Fischen." },
+        { t: "Investment-Region", d: "Land & Lodges für Investoren mit langem Horizont." },
+        { t: "Lokale Partnerschaften", d: "Zusammenarbeit mit Gemeinde und Bergführern." }
+      ],
+      website: "https://rozaje-unveiled.dreicedis.workers.dev/",
+      hq: "Rožaje, Montenegro",
+      founded: "2024",
+      region: "Norden / Alpen",
+      sphere: "Alpine",
+      accent: "#38bdf8",
+      logoBg: "#000000",
+      logo: "public/logos/rozaje.png"
+    },
+    {
+      id: "montestate-marine",
+      code: "MNE/ECO-005",
+      name: "Montestate & Marine",
+      sector: "Küste & Marine",
+      tagline: "Küste, Marine & Lifestyle.",
+      lede: "Premium-Immobilien an der Adria, kombiniert mit einer eigenen Marine-Sparte für Yachten und Motorboote. Für jene, die das Wasser nicht nur sehen, sondern bewohnen wollen.",
+      services: [
+        { t: "Coastal Property", d: "Ufergrundstücke, Penthouses, Marina-Residenzen." },
+        { t: "Boat Charter", d: "Tages- und Wochencharter mit Skipper." },
+        { t: "Premium Lifestyle", d: "Concierge, Berthing, Captain-Service." },
+        { t: "Adria-Netzwerk", d: "Partner-Marinas von Tivat bis Bar." }
+      ],
+      website: "https://montestate-marine.dreicedis.workers.dev/",
+      hq: "Porto Montenegro, Tivat",
+      founded: "2024",
+      region: "Adriaküste",
+      sphere: "Marine",
+      accent: "#06b6d4",
+      logoBg: "#0f172a",
+      logo: "public/logos/montestate-marine.png"
+    }
+  ];
+
+  const I18N = {
+    de: {
+      htmlLang: 'de',
+      title: 'Montesphere — Ökosystem aus Montenegro',
+      nav: { ecosystem: 'Ökosystem', contact: 'Kontakt', about: 'Über uns' },
+      hero: {
+        eyebrow: 'Montenegro Ecosystem · Est. 2024',
+        headline: 'Fünf Häuser. <em>Eine</em> Adriatische Sphäre.'
+      },
+      footer: { open: 'Klicke ein Unternehmen zum Erkunden', close: 'zum Schließen' },
+      panel: { services: 'Leistungen', servicesLabel: 'SERVICES' },
+      actions: { close: 'Schließen', visit: 'Website besuchen' },
+      meta: { hq: 'Hauptsitz', founded: 'Gegründet', region: 'Region', sphere: 'Sphäre' },
+      status: 'aktiv'
+    },
+    en: {
+      htmlLang: 'en',
+      title: 'Montesphere — Ecosystem from Montenegro',
+      nav: { ecosystem: 'Ecosystem', contact: 'Contact', about: 'About' },
+      hero: {
+        eyebrow: 'Montenegro Ecosystem · Est. 2024',
+        headline: 'Five houses. <em>One</em> Adriatic sphere.'
+      },
+      footer: { open: 'Click a company to explore', close: 'to close' },
+      panel: { services: 'Services', servicesLabel: 'SERVICES' },
+      actions: { close: 'Close', visit: 'Visit website' },
+      meta: { hq: 'Headquarters', founded: 'Founded', region: 'Region', sphere: 'Sphere' },
+      status: 'active'
+    },
+    mne: {
+      htmlLang: 'cnr',
+      title: 'Montesphere — Ekosistem iz Crne Gore',
+      nav: { ecosystem: 'Ekosistem', contact: 'Kontakt', about: 'O nama' },
+      hero: {
+        eyebrow: 'Crnogorski ekosistem · Est. 2024',
+        headline: 'Pet kuća. <em>Jedna</em> jadranska sfera.'
+      },
+      footer: { open: 'Klikni kompaniju za istraživanje', close: 'za zatvaranje' },
+      panel: { services: 'Usluge', servicesLabel: 'USLUGE' },
+      actions: { close: 'Zatvori', visit: 'Posjeti website' },
+      meta: { hq: 'Sjedište', founded: 'Osnovano', region: 'Region', sphere: 'Sfera' },
+      status: 'aktivno'
+    }
+  };
+
+  const COMPANY_COPY = {
+    de: {
+      "monte-i-more": {
+        sector: "Tourismus",
+        tagline: "Tourismus zwischen Küste und Bergen.",
+        lede: "Die einzige operativ tätige Tourismusgesellschaft der Sphäre. Wir kuratieren Reisen, die das Land in seiner ganzen Breite zeigen — von der Bucht von Kotor bis zu den Hochebenen des Nordens.",
+        services: [
+          { t: "Buchungen", d: "Kuratierte Aufenthalte in ausgewählten Häusern und Hotels." },
+          { t: "Apartments", d: "Privatresidenzen entlang der Küste und im Hinterland." },
+          { t: "Boote", d: "Tagestouren und Charter ab Tivat, Budva und Herceg Novi." },
+          { t: "Erlebnisse", d: "Kulinarik, Wandern, Weingüter, lokal geführt." }
+        ],
+        region: "Küste & Inland",
+        sphere: "Tourismus"
+      },
+      "immo-monte": {
+        sector: "Immobilien & Relocation",
+        tagline: "Immobilien & Relocation, neu gedacht.",
+        lede: "Wir begleiten europäische Familien und Unternehmer beim Schritt nach Montenegro — vom ersten Objekt bis zur Steuer- und Aufenthaltsfrage. Mit Vertrauen, lokalem Netzwerk und Diskretion.",
+        services: [
+          { t: "Immobilien", d: "Geprüfte Objekte vom Apartment bis zur Villa." },
+          { t: "Relocation", d: "Aufenthaltstitel, Bankkonto, Schulen, Healthcare." },
+          { t: "Rechtsberatung", d: "Kaufvertrag, Eigentumsübertragung, Compliance." },
+          { t: "Lokales Netzwerk", d: "Architekten, Notare, Verwalter — alles aus einer Hand." }
+        ],
+        region: "ME · weit",
+        sphere: "Real Estate"
+      },
+      "docc": {
+        sector: "Bau & Realisierung",
+        tagline: "Bau & Realisierung, präzise ausgeführt.",
+        lede: "Generalunternehmer für anspruchsvolle Wohn- und Gewerbeprojekte. Wir übersetzen Architektur in Substanz — vom Erdaushub bis zum schlüsselfertigen Übergabeprotokoll.",
+        services: [
+          { t: "Bauausführung", d: "Rohbau, Ausbau, technische Gewerke aus einer Hand." },
+          { t: "Projektmanagement", d: "Kosten, Termine, Qualität — transparent berichtet." },
+          { t: "Technische Realisierung", d: "Statik, Haustechnik, Smart-Home-Integration." },
+          { t: "Bauüberwachung", d: "Externe Kontrolle für Investoren und Bauherren." }
+        ],
+        region: "Zentral / Küste",
+        sphere: "Construction"
+      },
+      "rozaje": {
+        sector: "Alpiner Tourismus",
+        tagline: "Die alpine Projektwelt des Nordens.",
+        lede: "Rožaje, das ganze Jahr. Skigebiete, Wanderhochebenen und ein in Europa noch unentdecktes Investitionsgebiet — wir entwickeln den Norden Montenegros zu einem alpinen Ziel mit eigener Handschrift.",
+        services: [
+          { t: "Wintertourismus", d: "Pisten, Lifte, Hütten, Skischule." },
+          { t: "Alpine Erlebnisse", d: "Trekking, Bike-Park, Nordic Walking, Forellen-Fischen." },
+          { t: "Investment-Region", d: "Land & Lodges für Investoren mit langem Horizont." },
+          { t: "Lokale Partnerschaften", d: "Zusammenarbeit mit Gemeinde und Bergführern." }
+        ],
+        region: "Norden / Alpen",
+        sphere: "Alpine"
+      },
+      "montestate-marine": {
+        sector: "Küste & Marine",
+        tagline: "Küste, Marine & Lifestyle.",
+        lede: "Premium-Immobilien an der Adria, kombiniert mit einer eigenen Marine-Sparte für Yachten und Motorboote. Für jene, die das Wasser nicht nur sehen, sondern bewohnen wollen.",
+        services: [
+          { t: "Coastal Property", d: "Ufergrundstücke, Penthouses, Marina-Residenzen." },
+          { t: "Boat Charter", d: "Tages- und Wochencharter mit Skipper." },
+          { t: "Premium Lifestyle", d: "Concierge, Berthing, Captain-Service." },
+          { t: "Adria-Netzwerk", d: "Partner-Marinas von Tivat bis Bar." }
+        ],
+        region: "Adriaküste",
+        sphere: "Marine"
+      }
+    },
+    en: {
+      "monte-i-more": {
+        sector: "Tourism",
+        tagline: "Tourism between coast and mountains.",
+        lede: "The sphere's operating tourism company. We curate journeys that reveal Montenegro in its full range — from the Bay of Kotor to the northern highlands.",
+        services: [
+          { t: "Bookings", d: "Curated stays in selected homes and hotels." },
+          { t: "Apartments", d: "Private residences along the coast and inland." },
+          { t: "Boats", d: "Day tours and charters from Tivat, Budva and Herceg Novi." },
+          { t: "Experiences", d: "Food, hiking, wineries and local-led discovery." }
+        ],
+        region: "Coast & inland",
+        sphere: "Tourism"
+      },
+      "immo-monte": {
+        sector: "Real Estate & Relocation",
+        tagline: "Real estate and relocation, reimagined.",
+        lede: "We guide European families and entrepreneurs through their move to Montenegro — from the first property to tax and residency questions. Built on trust, local network and discretion.",
+        services: [
+          { t: "Real Estate", d: "Verified properties from apartments to villas." },
+          { t: "Relocation", d: "Residence permits, bank accounts, schools and healthcare." },
+          { t: "Legal Guidance", d: "Purchase contracts, ownership transfer and compliance." },
+          { t: "Local Network", d: "Architects, notaries and property managers from one source." }
+        ],
+        region: "All Montenegro",
+        sphere: "Real Estate"
+      },
+      "docc": {
+        sector: "Construction & Delivery",
+        tagline: "Construction and delivery, precisely executed.",
+        lede: "A general contractor for demanding residential and commercial projects. We translate architecture into substance — from excavation to turnkey handover.",
+        services: [
+          { t: "Construction", d: "Shell, fit-out and technical works from one team." },
+          { t: "Project Management", d: "Cost, schedule and quality reported transparently." },
+          { t: "Technical Delivery", d: "Structure, building systems and smart-home integration." },
+          { t: "Site Supervision", d: "Independent control for investors and clients." }
+        ],
+        region: "Central / coast",
+        sphere: "Construction"
+      },
+      "rozaje": {
+        sector: "Alpine Tourism",
+        tagline: "The alpine project world of the north.",
+        lede: "Rožaje, all year round. Ski areas, hiking plateaus and an investment region still undiscovered by much of Europe — we are developing Montenegro's north into an alpine destination with its own signature.",
+        services: [
+          { t: "Winter Tourism", d: "Slopes, lifts, lodges and ski school." },
+          { t: "Alpine Experiences", d: "Trekking, bike park, Nordic walking and trout fishing." },
+          { t: "Investment Region", d: "Land and lodges for long-horizon investors." },
+          { t: "Local Partnerships", d: "Cooperation with the municipality and mountain guides." }
+        ],
+        region: "North / alpine",
+        sphere: "Alpine"
+      },
+      "montestate-marine": {
+        sector: "Coast & Marine",
+        tagline: "Coast, marine and lifestyle.",
+        lede: "Premium Adriatic real estate combined with an in-house marine branch for yachts and motorboats. For those who do not only want to see the water, but live with it.",
+        services: [
+          { t: "Coastal Property", d: "Waterfront land, penthouses and marina residences." },
+          { t: "Boat Charter", d: "Daily and weekly charters with skipper." },
+          { t: "Premium Lifestyle", d: "Concierge, berthing and captain services." },
+          { t: "Adriatic Network", d: "Partner marinas from Tivat to Bar." }
+        ],
+        region: "Adriatic coast",
+        sphere: "Marine"
+      }
+    },
+    mne: {
+      "monte-i-more": {
+        sector: "Turizam",
+        tagline: "Turizam između obale i planina.",
+        lede: "Operativna turistička kompanija sfere. Kreiramo putovanja koja pokazuju Crnu Goru u njenoj punoj širini — od Bokokotorskog zaliva do visoravni sjevera.",
+        services: [
+          { t: "Rezervacije", d: "Odabrani boravci u provjerenim kućama i hotelima." },
+          { t: "Apartmani", d: "Privatne rezidencije na obali i u zaleđu." },
+          { t: "Brodovi", d: "Dnevne ture i čarteri iz Tivta, Budve i Herceg Novog." },
+          { t: "Doživljaji", d: "Gastronomija, planinarenje, vinarije i lokalni vodiči." }
+        ],
+        region: "Obala i unutrašnjost",
+        sphere: "Turizam"
+      },
+      "immo-monte": {
+        sector: "Nekretnine i relokacija",
+        tagline: "Nekretnine i relokacija, na novi način.",
+        lede: "Pratimo evropske porodice i preduzetnike pri preseljenju u Crnu Goru — od prve nekretnine do poreskih i boravišnih pitanja. Uz povjerenje, lokalnu mrežu i diskreciju.",
+        services: [
+          { t: "Nekretnine", d: "Provjereni objekti od apartmana do vila." },
+          { t: "Relokacija", d: "Boravak, bankovni račun, škole i zdravstvo." },
+          { t: "Pravna podrška", d: "Kupoprodajni ugovor, prenos vlasništva i usklađenost." },
+          { t: "Lokalna mreža", d: "Arhitekte, notari i upravnici na jednom mjestu." }
+        ],
+        region: "Cijela Crna Gora",
+        sphere: "Nekretnine"
+      },
+      "docc": {
+        sector: "Gradnja i realizacija",
+        tagline: "Gradnja i realizacija, precizno izvedeno.",
+        lede: "Generalni izvođač za zahtjevne stambene i poslovne projekte. Arhitekturu pretvaramo u stvarnu vrijednost — od iskopa do predaje ključ u ruke.",
+        services: [
+          { t: "Izvođenje radova", d: "Grubi radovi, završni radovi i instalacije iz jedne ruke." },
+          { t: "Projekt menadžment", d: "Troškovi, rokovi i kvalitet uz transparentno izvještavanje." },
+          { t: "Tehnička realizacija", d: "Statika, sistemi objekta i smart-home integracija." },
+          { t: "Nadzor gradnje", d: "Nezavisna kontrola za investitore i klijente." }
+        ],
+        region: "Centralno / obala",
+        sphere: "Gradnja"
+      },
+      "rozaje": {
+        sector: "Planinski turizam",
+        tagline: "Planinski projektni svijet sjevera.",
+        lede: "Rožaje tokom cijele godine. Skijališta, planinske visoravni i investiciona regija koju Evropa tek otkriva — razvijamo sjever Crne Gore kao autentičnu planinsku destinaciju.",
+        services: [
+          { t: "Zimski turizam", d: "Staze, žičare, kolibe i škola skijanja." },
+          { t: "Planinski doživljaji", d: "Trekking, bike park, nordijsko hodanje i ribolov pastrmke." },
+          { t: "Investiciona regija", d: "Zemljište i lodževi za investitore dugog horizonta." },
+          { t: "Lokalna partnerstva", d: "Saradnja sa opštinom i planinskim vodičima." }
+        ],
+        region: "Sjever / planine",
+        sphere: "Planine"
+      },
+      "montestate-marine": {
+        sector: "Obala i nautika",
+        tagline: "Obala, nautika i lifestyle.",
+        lede: "Premium nekretnine na Jadranu, povezane sa sopstvenom marine granom za jahte i motorne brodove. Za one koji vodu ne žele samo da gledaju, nego da žive uz nju.",
+        services: [
+          { t: "Nekretnine na obali", d: "Placevi uz vodu, penthouse stanovi i marina rezidencije." },
+          { t: "Čarter brodova", d: "Dnevni i sedmični čarteri sa skipperom." },
+          { t: "Premium lifestyle", d: "Concierge, vezovi i usluge kapetana." },
+          { t: "Jadranska mreža", d: "Partnerske marine od Tivta do Bara." }
+        ],
+        region: "Jadranska obala",
+        sphere: "Nautika"
+      }
+    }
+  };
+
+  let currentLang = localStorage.getItem('montesphere-lang') || 'de';
+  if (!I18N[currentLang]) currentLang = 'de';
+  let activePanelIndex = null;
+
+  function readPath(source, path) {
+    return path.split('.').reduce((value, key) => value && value[key], source);
+  }
+
+  function companyText(company) {
+    return (COMPANY_COPY[currentLang] && COMPANY_COPY[currentLang][company.id]) || COMPANY_COPY.de[company.id] || company;
+  }
+
+  function applyLanguage(lang) {
+    currentLang = I18N[lang] ? lang : 'de';
+    localStorage.setItem('montesphere-lang', currentLang);
+    const copy = I18N[currentLang];
+
+    document.documentElement.lang = copy.htmlLang;
+    document.title = copy.title;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const value = readPath(copy, el.dataset.i18n);
+      if (value) el.textContent = value;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const value = readPath(copy, el.dataset.i18nHtml);
+      if (value) el.innerHTML = value;
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      const value = readPath(copy, el.dataset.i18nAria);
+      if (value) el.setAttribute('aria-label', value);
+    });
+    document.getElementById('p-status').textContent = copy.status;
+    document.querySelectorAll('[data-lang]').forEach(btn => {
+      const isActive = btn.dataset.lang === currentLang;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    if (activePanelIndex !== null) renderPanel(activePanelIndex);
+  }
+
+  /* ───── Sparkles ───── */
+  (function makeSparkles() {
+    const host = document.getElementById('sparkles');
+    const N = 38;
+    for (let i = 0; i < N; i++) {
+      const s = document.createElement('span');
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.top = (Math.random() * 100) + '%';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.animationDuration = (3 + Math.random() * 4) + 's';
+      host.appendChild(s);
+    }
+    // a few larger gold-tinted points
+    for (let i = 0; i < 4; i++) {
+      const s = document.createElement('span');
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.top = (Math.random() * 100) + '%';
+      s.style.width = '2px';
+      s.style.height = '2px';
+      s.style.background = '#e6c98a';
+      s.style.boxShadow = '0 0 8px #c9a96e, 0 0 16px rgba(201,169,110,0.5)';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.animationDuration = (4 + Math.random() * 3) + 's';
+      host.appendChild(s);
+    }
+  })();
+
+  /* ───── Build satellites ───── */
+  const wrapper = document.getElementById('orbital');
+  COMPANIES.forEach((c, i) => {
+    const el = document.createElement('button');
+    el.className = 'orbital-item';
+    el.dataset.idx = i;
+    el.dataset.id = c.id;
+    el.style.setProperty('--accent', c.accent);
+    el.style.setProperty('--logoBg', c.logoBg);
+    el.setAttribute('aria-label', c.name);
+    el.innerHTML = `
+      <div class="logo-disc"><img src="${c.logo}" alt="${c.name}" /></div>
+      <div class="label">${c.name}</div>
+    `;
+    wrapper.appendChild(el);
+  });
+
+  /* ───── Orbital animation ───── */
+  const items = document.querySelectorAll('.orbital-item');
+  const N = items.length;
+
+  let angle = -Math.PI / 2;       // start at top
+  let hovered = -1;
+  // smooth speed transition: target rotation rate per frame
+  let speed = 0.004;
+  let targetSpeed = 0.004;
+  let FAST = 0.004;
+  let SLOW = 0.001;
+
+  // build SVG connector lines
+  const svg = document.getElementById('connectors');
+  svg.setAttribute('viewBox', '0 0 100 100');
+  const lines = [];
+  for (let i = 0; i < N; i++) {
+    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    ln.setAttribute('x1', '50'); ln.setAttribute('y1', '50');
+    ln.setAttribute('x2', '50'); ln.setAttribute('y2', '50');
+    ln.style.setProperty('--lineAccent', COMPANIES[i].accent);
+    svg.appendChild(ln);
+    lines.push(ln);
+  }
+
+  function place() {
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const size = wrapperRect.width;
+    const itemSize = items[0].offsetWidth;
+    const radius = size * 0.5 - itemSize * 0.55;
+    const cx = size * 0.5;
+    const cy = size * 0.5;
+
+    for (let i = 0; i < N; i++) {
+      const a = angle + (i * (Math.PI * 2 / N));
+      const x = cx + Math.cos(a) * radius - itemSize * 0.5;
+      const y = cy + Math.sin(a) * radius - itemSize * 0.5;
+      items[i].style.left = x + 'px';
+      items[i].style.top  = y + 'px';
+
+      // connector line in viewBox 0..100 coords
+      const px = ((cx + Math.cos(a) * radius) / size) * 100;
+      const py = ((cy + Math.sin(a) * radius) / size) * 100;
+      lines[i].setAttribute('x2', px.toFixed(2));
+      lines[i].setAttribute('y2', py.toFixed(2));
+    }
+  }
+
+  function tick() {
+    // smooth speed lerp
+    speed += (targetSpeed - speed) * 0.05;
+    angle += speed;
+    place();
+    requestAnimationFrame(tick);
+  }
+
+  // hover pause
+  items.forEach((el, i) => {
+    el.addEventListener('mouseenter', () => {
+      hovered = i;
+      targetSpeed = SLOW;
+      lines[i].classList.add('active');
+    });
+    el.addEventListener('mouseleave', () => {
+      hovered = -1;
+      targetSpeed = FAST;
+      lines[i].classList.remove('active');
+    });
+    el.addEventListener('focus', () => { targetSpeed = SLOW; lines[i].classList.add('active'); });
+    el.addEventListener('blur',  () => { targetSpeed = FAST; lines[i].classList.remove('active'); });
+    el.addEventListener('click', () => openPanel(i));
+  });
+
+  window.addEventListener('resize', place);
+  place();
+  requestAnimationFrame(tick);
+
+  /* ───── Detail panel ───── */
+  const panel = document.getElementById('panel');
+  const scrim = document.getElementById('scrim');
+
+  function renderPanel(idx) {
+    const c = COMPANIES[idx];
+    const text = companyText(c);
+    const ui = I18N[currentLang];
+    panel.style.setProperty('--accent', c.accent);
+    panel.style.setProperty('--logoBg', c.logoBg);
+    document.getElementById('p-disc').setAttribute('data-id', c.id);
+    const pl = document.getElementById('p-logo');
+    pl.removeAttribute('style');
+    pl.src = c.logo;
+    pl.alt = c.name;
+    document.getElementById('p-id').textContent = c.code;
+    document.getElementById('p-name').textContent = c.name;
+    document.getElementById('p-sector').textContent = text.sector;
+    document.getElementById('p-status').textContent = ui.status;
+    document.getElementById('p-tagline').textContent = text.tagline;
+    document.getElementById('p-lede').textContent = text.lede;
+    document.getElementById('p-snum').textContent = '0' + text.services.length + ' / ' + ui.panel.servicesLabel;
+    document.getElementById('p-visit').href = c.website;
+    document.getElementById('p-hq').textContent = c.hq;
+    document.getElementById('p-founded').textContent = c.founded;
+    document.getElementById('p-region').textContent = text.region;
+    document.getElementById('p-sphere').textContent = text.sphere;
+
+    const sv = document.getElementById('p-services');
+    sv.innerHTML = text.services.map((s, i) => `
+      <div class="service">
+        <div class="s-num">0${i + 1}</div>
+        <h4>${s.t}</h4>
+        <p>${s.d}</p>
+      </div>
+    `).join('');
+  }
+
+  function openPanel(idx) {
+    activePanelIndex = idx;
+    renderPanel(idx);
+    panel.classList.add('open');
+    scrim.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    targetSpeed = SLOW;
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    scrim.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    activePanelIndex = null;
+    targetSpeed = FAST;
+  }
+
+  document.querySelectorAll('[data-lang]').forEach(btn => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+  });
+  document.getElementById('p-close').addEventListener('click', closePanel);
+  scrim.addEventListener('click', closePanel);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePanel();
+  });
+  applyLanguage(currentLang);
+
+  /* ───── Tweaks ───── */
+  const TWEAKS = /*EDITMODE-BEGIN*/{
+    "mood": "ember",
+    "cadence": "flow",
+    "cosmos": "galaxy"
+  }/*EDITMODE-END*/;
+
+  const MOODS = {
+    gold:   { hue: '#c9a96e', glow1: 'rgba(201,169,110,0.25)', glow2: 'rgba(70,100,200,0.20)', warm: '#1c2e52' },
+    marine: { hue: '#5fd1e0', glow1: 'rgba(95,209,224,0.30)',  glow2: 'rgba(20,140,180,0.22)', warm: '#082434' },
+    ember:  { hue: '#e8a268', glow1: 'rgba(232,162,104,0.30)', glow2: 'rgba(180,70,40,0.22)',  warm: '#2e1410' },
+    frost:  { hue: '#bcd3ff', glow1: 'rgba(188,211,255,0.32)', glow2: 'rgba(120,160,255,0.18)', warm: '#0d1a36' }
+  };
+  const CADENCE = {
+    calm: { fast: 0.0014, sweep: '40s', orbits: '70s' },
+    flow: { fast: 0.004,  sweep: '18s', orbits: '36s' },
+    spin: { fast: 0.011,  sweep: '7s',  orbits: '14s' }
+  };
+  const COSMOS = {
+    void:   { stars: 14, twinkles: 0.4, neb: 0.5 },
+    orbit:  { stars: 42, twinkles: 1.0, neb: 1.0 },
+    galaxy: { stars: 95, twinkles: 1.4, neb: 1.6 }
+  };
+
+  const tweaksPanel = document.getElementById('tweaks');
+  const sparkleHost = document.querySelector('.sparkles');
+
+  function rebuildSparkles(n, intensity) {
+    if (!sparkleHost) return;
+    sparkleHost.innerHTML = '';
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('span');
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.top = (Math.random() * 100) + '%';
+      s.style.opacity = String(0.35 + Math.random() * 0.55 * intensity);
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.animationDuration = (3 + Math.random() * 4) + 's';
+      sparkleHost.appendChild(s);
+    }
+  }
+
+  function applyTweaks() {
+    const m = MOODS[TWEAKS.mood] || MOODS.gold;
+    const r = document.documentElement.style;
+    r.setProperty('--gold', m.hue);
+    r.setProperty('--mood-glow1', m.glow1);
+    r.setProperty('--mood-glow2', m.glow2);
+    r.setProperty('--mood-warm', m.warm);
+
+    const cad = CADENCE[TWEAKS.cadence] || CADENCE.flow;
+    FAST = cad.fast;
+    SLOW = FAST * 0.25;
+    if (hovered === -1 && !panel.classList.contains('open')) targetSpeed = FAST;
+    r.setProperty('--sweep-dur', cad.sweep);
+    r.setProperty('--orbit-dur', cad.orbits);
+
+    const c = COSMOS[TWEAKS.cosmos] || COSMOS.orbit;
+    rebuildSparkles(c.stars, c.twinkles);
+    r.setProperty('--neb-intensity', String(c.neb));
+
+    document.querySelectorAll('.seg').forEach(seg => {
+      const key = seg.dataset.tweak;
+      seg.querySelectorAll('button').forEach(b => {
+        b.classList.toggle('active', b.dataset.val === TWEAKS[key]);
+      });
+    });
+  }
+
+  document.querySelectorAll('.seg').forEach(seg => {
+    const key = seg.dataset.tweak;
+    seg.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => {
+        TWEAKS[key] = b.dataset.val;
+        applyTweaks();
+        try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: b.dataset.val } }, '*'); } catch(e) {}
+      });
+    });
+  });
+
+  window.addEventListener('message', (e) => {
+    const t = e.data && e.data.type;
+    if (t === '__activate_edit_mode')   tweaksPanel.classList.add('open');
+    if (t === '__deactivate_edit_mode') tweaksPanel.classList.remove('open');
+  });
+  document.getElementById('tweaks-close').addEventListener('click', () => {
+    tweaksPanel.classList.remove('open');
+    try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch(e) {}
+  });
+  try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch(e) {}
+
+  applyTweaks();
+</script>
+</body>
+</html>
+
+<style id="__om-edit-overrides">
+</style>
