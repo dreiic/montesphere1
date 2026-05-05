@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp index.html index-print.html dist/ && cp -R public dist/public",
+    "build": "rm -rf dist && mkdir -p dist && cp index.html index-print.html dist/ && cp -R public dist/public && cp public/favicon.ico public/favicon-96x96.png public/apple-touch-icon.png public/web-app-manifest-192x192.png public/web-app-manifest-512x512.png public/site.webmanifest dist/",
     "deploy": "npm run build && wrangler deploy",
     "dev": "npm run build && wrangler dev"
   },
